@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+input {
+	height: 50px;
+}
+button {
+	height: 50px;
+}
