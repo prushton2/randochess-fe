@@ -12,20 +12,26 @@ button {
 	height: 50px;
 }
 
-.lightSquare {
+.square {
 	display: inline;
 	float: left;
-	background: #D69161;
+	background: purple;
 	width: 50px;
 	height: 50px;
+	font-size: 35px;
 }
 
-.darkSquare {
-	display: inline;
-	float: left;
+.light {
+	background: #D69161;
+}
+.dark {
 	background: #513019;
-	width: 50px;
-	height: 50px;
+}
+.red {
+	background: #990000;
+}
+.grey {
+	background: #555555;
 }
 
 .blacktext {
@@ -33,4 +39,16 @@ button {
 }
 .whitetext {
 	color: white;
+}
+
+.guestCode {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+}
+
+@font-face {
+    font-family: "NotoSans Nerd Font Regular";
+    src: url("https://github.com/prushton2/nerdfont/raw/master/3270NerdFont-Regular.ttf") format("truetype");
 }

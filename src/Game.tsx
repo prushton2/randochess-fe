@@ -1,31 +1,65 @@
 import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { Fetch, Move } from './axios.ts'
 import './Game.css'
 
 
 
-function RenderSquare(piece: int, number: int) {
-	let pieces: string[] = [" ", "P", "R", "N", "B", "Q", "K"];
-	let color: string = piece > 128 ? "blacktext" : "whitetext";
-
-	if(piece >= 128) {
-		piece -= 128;
-	}
-
-	let column = number + parseInt(number/8);
-	let classname: string = column%2==0 ? "lightSquare" : "darkSquare";
-
-	return <div className={classname} key={"Board Element "+number}>
-		<label className={color}>{pieces[piece]}</label>
-	</div>
-}
 
 
 function RenderGame() {
 	const [squareHTML, setSquareHTML] = useState<JSX.Element[]>();
-	let array: int[] = [130,131,132,133,134,132,131,130,129,129,129,129,129,129,129,129,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,3,4,5,6,4,3,2];
-	useEffect(() => {
+	const [start_pos, setStart_pos] = useState<int>(-1);
+	const [end_pos, setEnd_pos] = useState<int>(-1);
+	
+	function manageClick(number: int) {
+		if(start_pos == -1) {
+			setStart_pos(number);
+		} else if (end_pos == -1) {
+			setEnd_pos(number);
+		} else {
+			setStart_pos(-1);
+			setEnd_pos(-1);
+		}
+	}
+
+	function RenderSquare(piece: int, number: int) {
+		let pieces: string[] = [" ", "", "", "", "", "", ""];
+		let color: string = "whitetext";
+
+		if(piece >= 128) {
+			piece -= 128;
+			color = "blacktext";
+		}
+
+		if (piece >= 32) {
+			piece -= 32;
+		}
+
+		let column = number + parseInt(number/8);
+		let classname: string = column%2==0 ? "square light" : "square dark";
+
+		if(start_pos == number) { classname = "square red" }
+		if(end_pos == number)   { classname = "square red" }
+
+		return <div className={classname} key={"Board Element "+number} onClick={(e) => {manageClick(number)}}>
+			<label className={color}>{pieces[piece]}</label>
+		</div>
+	}
+	
+	async function init() {
+		if(start_pos != -1 && end_pos != -1) {
+			if ((await Move(localStorage.getItem("code"), start_pos, end_pos))["status"] == "Success") {
+				setStart_pos(-1);
+				setEnd_pos(-1);
+				return;
+			} else {
+			}
+		}
+
+		let array: int[] = (await Fetch(localStorage.getItem("code")))["board"];
+
 		let squares: JSX.Element[] = []
 
 		for(let i: int = 0; i < 64; i++) {
@@ -36,7 +70,13 @@ function RenderGame() {
 		}
 
 		setSquareHTML(squares);
-	}, []);
+
+	}
+
+	useEffect(() => {
+		init();
+	}, [start_pos, end_pos]);
+
 	return <>
 		{squareHTML}
 	</>
@@ -53,6 +93,7 @@ function Game() {
   return (
     <b>
 	<RenderGame />
+	<label className="guestCode">Join Code:<br />{localStorage.getItem("guest_code")}</label>
     </b>
   )
 }
