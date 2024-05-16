@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import { Fetch, Move } from './axios.ts'
+import { Fetch, Move, Leave } from './axios.ts'
 import './Game.css'
 import { useSearchParams } from 'react-router-dom'
 
@@ -26,6 +26,7 @@ function RenderGame() {
 		}
 	}
 
+
 	function RenderSquare(piece: int, number: int) {
 		let pieces: string[] = [" ", "", "", "", "", "", ""];
 		let color: string = "whitetext";
@@ -46,7 +47,7 @@ function RenderGame() {
 		if(end_pos == number)   { classname = "square red" }
 
 		return <div className={classname} key={"Board Element "+number} onClick={(e) => {manageClick(number)}}>
-			<label className={color}>{pieces[piece]}<br/>{number}</label>
+			<label className={color}>{pieces[piece]}</label>
 		</div>
 	}
 	
@@ -84,12 +85,22 @@ function RenderGame() {
 	</>
 }
 
+
 function Game() {
+	let [query] = useSearchParams();
+
+	async function leaveGame() {
+		console.log("Leaving");
+		await Leave(query.get("code"));
+		window.location.href = "/";
+	}
   return (
     <b>
-    	<button className="red">Leave</button>
 	<RenderGame />
-	<label className="guestCode">Join Code:<br />{localStorage.getItem("guest_code")}</label>
+	<div className="alignBottom">
+		<button className="bottomElement red" onClick={(e) => {leaveGame()}}>Leave</button>
+		<label className="bottomElement">Join Code: {localStorage.getItem("guest_code")}</label>
+	</div>
     </b>
   )
 }

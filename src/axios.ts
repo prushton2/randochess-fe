@@ -23,3 +23,9 @@ export async function Move(code: string, start_pos: int, end_pos: int) {
 	const response = await axios.post(url, `${start_pos}\n${end_pos}`);
 	return response.data;
 }
+
+export async function Leave(code: string) {
+	const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/game/leave/${code}`;
+	const response = await axios.get(url);
+	return response.data;
+}
