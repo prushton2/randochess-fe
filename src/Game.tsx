@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { Fetch, Move } from './axios.ts'
 import './Game.css'
-
+import { useSearchParams } from 'react-router-dom'
 
 
 
@@ -13,6 +13,8 @@ function RenderGame() {
 	const [start_pos, setStart_pos] = useState<int>(-1);
 	const [end_pos, setEnd_pos] = useState<int>(-1);
 	
+	let [query] = useSearchParams();
+
 	function manageClick(number: int) {
 		if(start_pos == -1) {
 			setStart_pos(number);
@@ -44,13 +46,13 @@ function RenderGame() {
 		if(end_pos == number)   { classname = "square red" }
 
 		return <div className={classname} key={"Board Element "+number} onClick={(e) => {manageClick(number)}}>
-			<label className={color}>{pieces[piece]}</label>
+			<label className={color}>{pieces[piece]}<br/>{number}</label>
 		</div>
 	}
 	
 	async function init() {
 		if(start_pos != -1 && end_pos != -1) {
-			if ((await Move(localStorage.getItem("code"), start_pos, end_pos))["status"] == "Success") {
+			if ((await Move(query.get("code"), start_pos, end_pos))["status"] == "Success") {
 				setStart_pos(-1);
 				setEnd_pos(-1);
 				return;
@@ -58,7 +60,7 @@ function RenderGame() {
 			}
 		}
 
-		let array: int[] = (await Fetch(localStorage.getItem("code")))["board"];
+		let array: int[] = (await Fetch(query.get("code")))["board"];
 
 		let squares: JSX.Element[] = []
 
@@ -82,16 +84,10 @@ function RenderGame() {
 	</>
 }
 
-
-
-
-
-
-
-
 function Game() {
   return (
     <b>
+    	<button className="red">Leave</button>
 	<RenderGame />
 	<label className="guestCode">Join Code:<br />{localStorage.getItem("guest_code")}</label>
     </b>

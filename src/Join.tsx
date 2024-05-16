@@ -13,15 +13,13 @@ function App() {
 	async function create_game() {
 		let codes = await CreateGame();
 		console.log(codes);
-		localStorage.setItem("code", codes.host_code);
 		localStorage.setItem("guest_code", codes.guest_code);
-		window.location.href = "/play";
+		window.location.href = `/play?code=${codes.host_code}`;
 	}
 	async function join_game() {
 		let result: string = await JoinGame(code as number);
 		if(result == "1") {
-			localStorage.setItem("code", code.host_code);
-			window.location.href = "/play";
+			window.location.href = `/play?code=${code}`;
 		} else {
 			alert("Invalid Code");
 		}
