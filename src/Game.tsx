@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import { Fetch, Move, Leave } from './axios.ts'
 import './Game.css'
 import { useSearchParams } from 'react-router-dom'
@@ -8,18 +6,18 @@ import { useSearchParams } from 'react-router-dom'
 
 function Game() {
 	const [chessBoard, setChessBoard] = useState<JSX.Element[]>([]);
-	const [boardData, setBoardData] = useState<int[]>([]);
+	const [boardData, setBoardData] = useState<number[]>([]);
 	const [turn, setTurn] = useState<string>("white");
 	const [rule, setRule] = useState<string>("white");
 	const [blackSide, setBlackSide] = useState<string>("");
-	const [start_pos, setStart_pos] = useState<int>(-1);
-	const [end_pos, setEnd_pos] = useState<int>(-1);
+	const [start_pos, setStart_pos] = useState<number>(-1);
+	const [end_pos, setEnd_pos] = useState<number>(-1);
 	const [winner, setWinner] = useState<string>("");
 
 	let [query] = useSearchParams();
 	let pieces: string[] = [" ", "", "", "", "", "", ""];
 	
-	function manageClick(number: int) {
+	function manageClick(number: number) {
 		if(turn == "white" && blackSide == query.get("code") || 
 		   turn == "black" && blackSide != query.get("code")) {
 		   	return;
@@ -34,9 +32,9 @@ function Game() {
 		}
 	}
 
-	function RenderSquare(i: int) {
+	function RenderSquare(i: number) {
 		let color: string = "whitetext";
-		let piece: int = boardData[i];
+		let piece: number = boardData[i];
 		if(piece > 128) {
 			piece -= 128;
 			color = "blacktext";
@@ -45,10 +43,10 @@ function Game() {
 			piece -= 32;
 		}
 
-		let column = i + parseInt(i/8);
+		let column = i + Math.floor(i/8);
 		let classname: string = column%2==0 ? "square light" : "square dark";
 
-		return <div className={start_pos == i || end_pos == i ? "square red" : classname} key={"board element "+i} onClick={(e) => manageClick(i)}>
+		return <div className={start_pos == i || end_pos == i ? "square red" : classname} key={"board element "+i} onClick={() => manageClick(i)}>
 			<label className={color}>{pieces[piece]}</label>
 		</div>
 	}
@@ -59,7 +57,7 @@ function Game() {
 		}
 		let squares: JSX.Element[] = []
 		
-		for(let i: int = 0; i < 64; i++) {
+		for(let i: number = 0; i < 64; i++) {
 			if(i%8 == 0 && i != 0) {
 				squares.push(<br key={"break "+i}/>);
 			}
@@ -78,10 +76,15 @@ function Game() {
 			if(start_pos == -1 || end_pos == -1) {
 				return;
 			}
-			if ((await Move(query.get("code"), start_pos, end_pos))["status"] == "Success") {
+
+			let code = query.get("code")
+			if(code == null) {
+				code = "";
+			}
+			if ((await Move(code, start_pos, end_pos))["status"] == "Success") {
 
 				//do the move client side so its more responsive
-				let newBoard: int[] = boardData;
+				let newBoard: number[] = boardData;
 				newBoard[end_pos] = newBoard[start_pos];
 				newBoard[start_pos] = 0;
 				setBoardData(newBoard);
@@ -96,7 +99,11 @@ function Game() {
 	
 	useEffect(() => {
 		let interval = setInterval(async() => {
-			let fetch = await Fetch(query.get("code"))
+			let code = query.get("code")
+			if(code == null) {
+				code = "";
+			}
+			let fetch = await Fetch(code)
 			if(fetch["status"] != "Success") {
 				alert("Game no longer exists");
 				window.location.href = "/";
@@ -113,7 +120,11 @@ function Game() {
 	}, [boardData]);
 	
 	async function leaveGame() {
-		await Leave(query.get("code"));
+		let code = query.get("code")
+		if(code == null) {
+			code = "";
+		}
+		await Leave(code);
 		window.location.href = "/";
 	}
 
@@ -121,7 +132,7 @@ function Game() {
 	<b>
 		{chessBoard}
 		<div className="alignBottom">
-			<button className="bottomElement red" onClick={(e) => {leaveGame()}}>Leave</button>
+			<button className="bottomElement red" onClick={() => {leaveGame()}}>Leave</button>
 			<label className="bottomElement">Join Code: {localStorage.getItem("guest_code")}</label>
 			<label className="bottomElement">Rule: {rule}</label>
 		</div>

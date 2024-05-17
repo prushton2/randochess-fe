@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import {CreateGame, JoinGame} from "./axios.ts"
 import './App.css'
 
@@ -17,7 +15,7 @@ function App() {
 		window.location.href = `/play?code=${codes.host_code}`;
 	}
 	async function join_game() {
-		let result: string = await JoinGame(code as number);
+		let result: string = await JoinGame(code);
 		if(result == "1") {
 			window.location.href = `/play?code=${code}`;
 		} else {
