@@ -41,6 +41,9 @@ button {
 .whitetext {
 	color: white;
 }
+.greytext {
+	color: grey;
+}
 
 .alignBottom {
 	position: absolute;

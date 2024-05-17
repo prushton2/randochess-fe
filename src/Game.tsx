@@ -9,6 +9,7 @@ import { useSearchParams } from 'react-router-dom'
 function Game() {
 	const [chessBoard, setChessBoard] = useState<JSX.Element[]>([]);
 	const [boardData, setBoardData] = useState<int[]>([]);
+	const [turn, setTurn] = useState<string>("white");
 	const [blackSide, setBlackSide] = useState<string>("");
 	const [start_pos, setStart_pos] = useState<int>(-1);
 	const [end_pos, setEnd_pos] = useState<int>(-1);
@@ -18,6 +19,10 @@ function Game() {
 	let pieces: string[] = [" ", "", "", "", "", "", ""];
 	
 	function manageClick(number: int) {
+		if(turn == "white" && blackSide == query.get("code") || 
+		   turn == "black" && blackSide != query.get("code")) {
+		   	return;
+		}
 		if(start_pos == -1) {
 			setStart_pos(number);
 		} else if (end_pos == -1) {
@@ -38,7 +43,7 @@ function Game() {
 		if(piece >= 32) {
 			piece -= 32;
 		}
-	
+
 		let column = i + parseInt(i/8);
 		let classname: string = column%2==0 ? "square light" : "square dark";
 
@@ -99,6 +104,7 @@ function Game() {
 			setBoardData(fetch["board"]);
 			setWinner(fetch["winner"]);
 			setBlackSide(fetch["black_side"]);
+			setTurn(fetch["turn"]);
 		}, 1000);
 
 		return () => clearInterval(interval);
