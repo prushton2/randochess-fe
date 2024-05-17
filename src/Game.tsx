@@ -10,6 +10,7 @@ function Game() {
 	const [chessBoard, setChessBoard] = useState<JSX.Element[]>([]);
 	const [boardData, setBoardData] = useState<int[]>([]);
 	const [turn, setTurn] = useState<string>("white");
+	const [rule, setRule] = useState<string>("white");
 	const [blackSide, setBlackSide] = useState<string>("");
 	const [start_pos, setStart_pos] = useState<int>(-1);
 	const [end_pos, setEnd_pos] = useState<int>(-1);
@@ -105,6 +106,7 @@ function Game() {
 			setWinner(fetch["winner"]);
 			setBlackSide(fetch["black_side"]);
 			setTurn(fetch["turn"]);
+			setRule(fetch["rule"]);
 		}, 1000);
 
 		return () => clearInterval(interval);
@@ -121,6 +123,7 @@ function Game() {
 		<div className="alignBottom">
 			<button className="bottomElement red" onClick={(e) => {leaveGame()}}>Leave</button>
 			<label className="bottomElement">Join Code: {localStorage.getItem("guest_code")}</label>
+			<label className="bottomElement">Rule: {rule}</label>
 		</div>
 	</b>
 	)
