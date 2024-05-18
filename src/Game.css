@@ -20,6 +20,7 @@ button {
 	height: 50px;
 	/*font-size: 35px;*/
 	font-size: 35px;
+	font-family: "Custom Font";
 }
 
 .light {
@@ -61,6 +62,6 @@ button {
 }
 
 @font-face {
-    font-family: "NotoSans Nerd Font Regular";
-    src: url("https://github.com/prushton2/nerdfont/raw/master/3270NerdFont-Regular.ttf") format("truetype");
+    font-family: "Custom Font";
+    src: url("3270NerdFont-Regular.ttf") format("truetype");
 }

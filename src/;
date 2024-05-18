@@ -1,2 +1,0 @@
-			<label className={color}>{pieces[piece]}{i}</label>
-		</div>
