@@ -63,5 +63,5 @@ button {
 
 @font-face {
     font-family: "Custom Font";
-    src: url("https://github.com/prushton2/nerdfont/raw/master/3270NerdFont-Regular.ttf") format("truetype");
+    src: url("/resources/3270NerdFont-Regular.ttf") format("truetype");
 }

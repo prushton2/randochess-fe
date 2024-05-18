@@ -1,4 +1,4 @@
-import font from '/public/3270NerdFont-Regular.ttf'
+//import font from '/public/3270NerdFont-Regular.ttf'
 import { useState, useEffect } from 'react'
 import { Fetch, Move, Leave } from './axios.ts'
 import './Game.css'
@@ -117,9 +117,6 @@ function Game() {
 			setRule(fetch["rule"]);
 		}, 1000);
 		
-		if(font == null) {
-			console.log("no font");
-		}
 
 		return () => clearInterval(interval);
 	}, [boardData]);
