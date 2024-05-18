@@ -1,3 +1,4 @@
+import font from '/public/3270NerdFont-Regular.ttf'
 import { useState, useEffect } from 'react'
 import { Fetch, Move, Leave } from './axios.ts'
 import './Game.css'
@@ -115,6 +116,10 @@ function Game() {
 			setTurn(fetch["turn"]);
 			setRule(fetch["rule"]);
 		}, 1000);
+		
+		if(font == null) {
+			console.log("no font");
+		}
 
 		return () => clearInterval(interval);
 	}, [boardData]);
@@ -127,7 +132,7 @@ function Game() {
 		await Leave(code);
 		window.location.href = "/";
 	}
-
+	
 	return (
 	<b>
 		{chessBoard}
